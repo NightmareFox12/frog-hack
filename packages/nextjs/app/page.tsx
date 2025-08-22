@@ -10,7 +10,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "~~/co
 const Home: NextPage = () => {
   const { address: connectedAddress } = useAccount();
 
-  //TODO: crear urls y luego subir a vercel. Desde alla eliminar el vrcel protection y asignar el dominio de Luis y rezar que funcione con las extensionses
   return (
     <>
       <div className="flex items-center flex-col grow pt-10">

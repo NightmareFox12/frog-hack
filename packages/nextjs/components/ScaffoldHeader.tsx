@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { FaucetButton } from "./scaffold-eth/FaucetButton";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth/RainbowKitCustomConnectButton";
 import { Button } from "./ui/shadcn/button";
-import { BugIcon, Home } from "lucide-react";
+import { BugIcon, File, Home } from "lucide-react";
 import { hardhat } from "viem/chains";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
@@ -19,6 +19,11 @@ export const menuLinks: HeaderMenuLink[] = [
     label: "Home",
     href: "/",
     icon: <Home />,
+  },
+  {
+    label: "Tasks",
+    href: "/tasks",
+    icon: <File />,
   },
   {
     label: "Debug Contracts",
@@ -38,7 +43,7 @@ export const ScaffoldHeader = () => {
         <div className="flex items-center gap-2 justify-center">
           <Link href="/" passHref className="flex items-center gap-2 ml-4 mr-6 shrink-0">
             <div className="flex relative w-10 h-10">
-              <Image src="/logo.svg" alt="SE2 logo" className="cursor-pointer" fill />
+              <Image src="/favicon.png" alt="FrogHack logo" className="cursor-pointer" fill />
             </div>
             <div className="flex flex-col">
               <span className="font-bold leading-tight">Scaffold-ETH</span>
