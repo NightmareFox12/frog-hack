@@ -9,17 +9,14 @@ import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 export default function TasksPage() {
   const authorizeX = () => {
     window.open(
-      `
-https://twitter.com/i/oauth2/authorize
-  ?response_type=code
-  &client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ
-  &redirect_uri=https%3A%2F%2Fwww.froghack.fun
-  &scope=users.read%20follows.read
-  &state=550e8400-e29b-41d4-a716-446655440000
-  &code_challenge=HASH_PKCE
-  &code_challenge_method=S256
-
-`,
+      `https://twitter.com/i/oauth2/authorize
+      ?response_type=code
+      &client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ
+      https%3A%2F%2Fwww.froghack.fun%2Fapi%2Ftwitter
+      &scope=users.read%20follows.read
+      &state=550e8400-e29b-41d4-a716-446655440000
+      &code_challenge=HASH_PKCE
+      &code_challenge_method=S256`,
       "_blank",
     );
   };
