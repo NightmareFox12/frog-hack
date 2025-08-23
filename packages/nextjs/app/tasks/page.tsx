@@ -1,13 +1,19 @@
 "use client";
 
-import { useEffect } from "react";
-import { Coins, Wallet } from "lucide-react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Coins, Loader, Wallet } from "lucide-react";
 import { Badge } from "~~/components/ui/shadcn/badge";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 
 export default function TasksPage() {
+  const searchParams = useSearchParams();
+
+  //states
+  const [isLoading, setLoading] = useState<boolean>(false);
+
   //functions
   const authorizeX = () => {
     const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun%2Ftasks&scope=users.read%20follows.read&state=${Math.random()
@@ -21,11 +27,25 @@ export default function TasksPage() {
   //effects
   useEffect(() => {
     console.log("me volviste a llamar");
-  }, []);
+
+    const state = searchParams.get("state");
+    const code = searchParams.get("code");
+    if (state !== null && code !== null) {
+      console.log("aqui toca bloquear la UI");
+      setLoading(true);
+    }
+  }, [searchParams]);
 
   return (
     <main className="relative w-full h-full">
       <section className="w-full h-full flex justify-center items-center mt-5">
+        {isLoading && (
+          <div className="absolute bg-white/70 w-full h-full z-10 flex justify-center items-center">
+            <div className="mt-20">
+              <Loader className="animate-spin size-10" />
+            </div>
+          </div>
+        )}
         <Card className="w-lg max-w-lg bg-green-50">
           <CardHeader>
             <CardTitle className="text-center text-3xl">Tasks</CardTitle>

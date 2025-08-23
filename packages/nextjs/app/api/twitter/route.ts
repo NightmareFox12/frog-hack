@@ -1,4 +1,7 @@
 import type { NextRequest } from "next/server";
+import crypto from "crypto";
+
+const SECRET_KEY = process.env.SECRET_KEY || "";
 
 export async function GET(request: NextRequest) {
   try {
@@ -6,18 +9,27 @@ export async function GET(request: NextRequest) {
     console.log(url);
 
     return Response.json({ message: "Hello World 2.0", url });
-    //TODO: verificar en tasks cuando el usuario llegue con el ?state y ?code y comprobar si hace match con el que tenia para enviarlo, mientras se hace eso ponerle un loading al usuario para que espere. porque despues del match debo hacer una locura. el cual es llamar al endpoint a ver si ese usuario sigue a las cuentas que este luis diga. que peo
   } catch (err) {
     console.log(err);
     return Response.json({ success: false });
   }
 }
 
+//TODO: aqui es donde viene lo dificil. DEBO USAR el secret key mas el payload para no tener que almacenar nada en bd y asi ayudarme con la carga. claro, una vez generado debo entregarlo al front para que el user vaya a twitter y en el redirect poder verificarl
 export async function POST(request: NextRequest) {
   try {
     const res = await request.json();
 
     console.log(res);
+
+    const payload = JSON.stringify({
+      nonce: crypto.randomBytes(8).toString("hex"),
+      ts: Date.now(),
+    });
+    const signature = crypto.createHmac("sha256", SECRET_KEY).update(payload).digest("hex");
+
+    const state = Buffer.from(`${payload}.${signature}`).toString("base64url");
+    return state;
 
     // return Response.json()
   } catch (err) {
@@ -25,3 +37,18 @@ export async function POST(request: NextRequest) {
     return Response.json({ response: err }, { status: 400 });
   }
 }
+
+//verificar en otro endpoint
+// function verifyState(state) {
+//   const raw = Buffer.from(state, "base64url").toString();
+//   const [payload, signature] = raw.split(".");
+//   const expected = crypto
+//     .createHmac("sha256", process.env.SECRET_KEY)
+//     .update(payload)
+//     .digest("hex");
+
+//   if (expected !== signature) return false;
+
+//   const { ts } = JSON.parse(payload);
+//   return Date.now() - ts < 5 * 60 * 1000; // 5 min
+// }
