@@ -10,7 +10,7 @@ import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 export default function TasksPage() {
   //functions
   const authorizeX = () => {
-    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun%2Fapi%2Ftwitter&scope=users.read%20follows.read&state=${Math.random()
+    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun%2Ftasks&scope=users.read%20follows.read&state=${Math.random()
       .toString(36)
       .substring(2, 2 + 10)}&code_challenge=ax33039fa&code_challenge_method=plain`;
 
