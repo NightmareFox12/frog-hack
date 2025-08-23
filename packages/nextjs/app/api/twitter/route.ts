@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(res: NextResponse, req: NextRequest) {
   try {
     const body = await req.json();
     console.log(req);
