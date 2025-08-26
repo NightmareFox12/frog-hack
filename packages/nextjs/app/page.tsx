@@ -66,6 +66,14 @@ const TasksPage: NextPage = () => {
 
   return (
     <main className="relative w-full h-full">
+      {isLoading && (
+        <div className="w-full h-full fixed bg-black/60 -top-0.5 z-30 flex justify-center items-center">
+          <div className="">
+            <Loader className="animate-spin size-10" />
+          </div>
+        </div>
+      )}
+
       <div className="grid place-items-center">
         <Badge variant="outline" className="py-2 px-4 flex justify-center gap-2 items-center">
           <Clock className="w-4 h-4" />
@@ -158,81 +166,66 @@ const TasksPage: NextPage = () => {
           </Card>
         </div>
       </article>
-
-      <section className="w-full h-full flex justify-center items-center mt-5">
-        {isLoading && (
-          <div className="absolute bg-white/70 w-full h-full z-10 flex justify-center items-center">
-            <div className="mt-20">
-              <Loader className="animate-spin size-10" />
-            </div>
-          </div>
-        )}
-      </section>
     </main>
   );
 };
 
 export default TasksPage;
 
-//  <>
-//     <div className="flex items-center flex-col grow pt-10">
-//       <div className="px-5">
-//         <h1 className="text-center">
-//           <span className="block text-2xl mb-2">Welcome to</span>
-//           <span className="block text-4xl font-bold">Scaffold-ETH 2</span>
-//         </h1>
-//         <div className="flex justify-center items-center space-x-2 flex-col">
-//           <p className="my-2 font-medium">Connected Address:</p>
-//           <Address address={connectedAddress} />
-//         </div>
-//         <p className="text-center text-lg">
-//           Get started by editing{" "}
-//           <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-//             packages/nextjs/app/page.tsx
-//           </code>
-//         </p>
-//         <p className="text-center text-lg">
-//           Edit your smart contract{" "}
-//           <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-//             YourContract.sol
-//           </code>{" "}
-//           in{" "}
-//           <code className="italic bg-base-300 text-base font-bold max-w-full break-words break-all inline-block">
-//             packages/hardhat/contracts
-//           </code>
-//         </p>
-//       </div>
+/**
+ * TODO: tengo que crear una function para llamar al backend y asi cumplir con esa parte
+ Captura el code y state
+Ya lo estás haciendo con useSearchParams() o window.location.search. Ejemplo:
 
-//       <article className="grow bg-base-300 w-full px-8 py-8">
-//         <div className="flex justify-center items-center gap-12 flex-col w-full md:flex-row">
-//           <Card className="flex-1 w-full justify-center h-[250px] dark:bg-primary dark:text-white">
-//             <CardHeader>
-//               <CardTitle className="flex justify-center">
-//                 <Bug className="size-12" />
-//               </CardTitle>
-//               <CardDescription className="text-center">Tinker with your smart contract using the </CardDescription>
-//             </CardHeader>
-//             <CardContent className="flex justify-center">
-//               <Link href="/debug" passHref className="underline">
-//                 Debug Contracts
-//               </Link>{" "}
-//             </CardContent>
-//           </Card>
+ts
+const code = searchParams.get("code");
+const state = searchParams.get("state");
+2. Intercambia el code por un access token
+Debes hacer una petición POST al endpoint de Twitter:
 
-//           <Card className="flex-1 w-full justify-center h-[250px] dark:bg-primary dark:text-white">
-//             <CardHeader>
-//               <CardTitle className="flex justify-center">
-//                 <Search className="size-12" />
-//               </CardTitle>
-//               <CardDescription className="text-center">Explore your local transactions with the</CardDescription>
-//             </CardHeader>
-//             <CardContent className="flex justify-center">
-//               <Link href="/blockexplorer" passHref className="underline">
-//                 Block Explorer
-//               </Link>
-//             </CardContent>
-//           </Card>
-//         </div>
-//       </article>
-//     </div>
-//   </>
+Código
+https://api.twitter.com/2/oauth2/token
+Con estos datos en el body (form-urlencoded):
+
+ts
+const data = {
+  grant_type: "authorization_code",
+  code,
+  redirect_uri: "http://localhost:3000", // debe coincidir con el que usaste antes
+  client_id: "TU_CLIENT_ID",
+  code_verifier: "ax33039fa", // el mismo que usaste en el `code_challenge`
+};
+Y en los headers:
+
+ts
+{
+  "Content-Type": "application/x-www-form-urlencoded",
+  Authorization: `Basic ${btoa(`${client_id}:${client_secret}`)}`,
+}
+⚠️ Twitter requiere que el code_verifier sea el mismo que usaste en el code_challenge_method=plain.
+
+3. Recibes el access token
+Si todo sale bien, Twitter te responde con algo como:
+
+json
+{
+  "token_type": "bearer",
+  "access_token": "AAAA...",
+  "expires_in": 7200,
+  "scope": "users.read follows.read",
+  "refresh_token": "BBBB..."
+}
+4. Usa el token para hacer peticiones
+Ahora puedes hacer peticiones autenticadas a la API de Twitter, por ejemplo:
+
+http
+GET https://api.twitter.com/2/users/me
+Authorization: Bearer TU_ACCESS_TOKEN
+🧠 ¿Y el state?
+El state es para proteger contra ataques CSRF. Lo ideal es que lo hayas guardado antes de redirigir al usuario a Twitter, y ahora lo compares con el que recibes para asegurarte de que coincide.
+
+🚨 Consejo de seguridad
+No hagas el intercambio del code por el token directamente en el frontend. Lo ideal es que tengas un backend que lo maneje, para no exponer tu client_secret.
+
+¿Quieres que te ayude a escribir el código para hacer ese POST a Twitter desde Node.js o desde tu backend? Te lo puedo dejar listo para copiar y pegar.
+ */
