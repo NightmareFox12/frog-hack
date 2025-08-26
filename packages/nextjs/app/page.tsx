@@ -18,7 +18,7 @@ import {
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 
 const TasksPage: NextPage = () => {
-  // const searchParams = useSearchParams();
+  const searchParams = useSearchParams();
 
   //states
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -26,7 +26,7 @@ const TasksPage: NextPage = () => {
   //functions
   const handleConnectTwitter = async () => {
     //authorize twitter
-    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun%2Ftasks&scope=users.read%20follows.read&state=${Math.random()
+    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun&scope=users.read%20follows.read&state=${Math.random()
       .toString(36)
       .substring(2, 2 + 10)}&code_challenge=ax33039fa&code_challenge_method=plain`;
 
@@ -56,16 +56,16 @@ const TasksPage: NextPage = () => {
   ] as const;
 
   //effects
-  // useEffect(() => {
-  //   console.log("me volviste a llamar");
+  useEffect(() => {
+    console.log("me volviste a llamar");
 
-  //   const state = searchParams.get("state");
-  //   const code = searchParams.get("code");
-  //   if (state !== null && code !== null) {
-  //     console.log("aqui toca bloquear la UI");
-  //     setLoading(true);
-  //   }
-  // }, [searchParams]);
+    const state = searchParams.get("state");
+    const code = searchParams.get("code");
+    if (state !== null && code !== null) {
+      console.log("aqui toca bloquear la UI");
+      setLoading(true);
+    }
+  }, [searchParams]);
 
   return (
     <main className="relative w-full h-full">
@@ -77,6 +77,7 @@ const TasksPage: NextPage = () => {
       </div>
 
       <h1 className="text-center text-4xl py-5 font-semibold">Win Up To 10</h1>
+
       {/* Timer */}
       <article className="flex justify-center items-center gap-6 ">
         <div className="max-w-[50px] max-h-[50px] flex flex-col -space-y-1 justify-center items-center bg-green-200 p-8 rounded-lg border border-green-400">
