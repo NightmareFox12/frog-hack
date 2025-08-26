@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { Clock, Coins, Loader, Twitter, Wallet } from "lucide-react";
 import type { NextPage } from "next";
 import { Badge } from "~~/components/ui/shadcn/badge";
@@ -18,8 +17,6 @@ import {
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 
 const TasksPage: NextPage = () => {
-  const searchParams = useSearchParams();
-
   //states
   const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -57,15 +54,15 @@ const TasksPage: NextPage = () => {
 
   //effects
   useEffect(() => {
-    console.log("me volviste a llamar");
-
-    const state = searchParams.get("state");
-    const code = searchParams.get("code");
-    if (state !== null && code !== null) {
-      console.log("aqui toca bloquear la UI");
+    const params = new URLSearchParams(window.location.search);
+    const state = params.get("state");
+    const code = params.get("code");
+    console.log(state);
+    console.log(code);
+    if (state && code) {
       setLoading(true);
     }
-  }, [searchParams]);
+  }, []);
 
   return (
     <main className="relative w-full h-full">
