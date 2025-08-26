@@ -18,7 +18,7 @@ import {
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 
 const TasksPage: NextPage = () => {
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams();
 
   //states
   const [isLoading, setLoading] = useState<boolean>(false);
@@ -56,16 +56,16 @@ const TasksPage: NextPage = () => {
   ] as const;
 
   //effects
-  useEffect(() => {
-    console.log("me volviste a llamar");
+  // useEffect(() => {
+  //   console.log("me volviste a llamar");
 
-    const state = searchParams.get("state");
-    const code = searchParams.get("code");
-    if (state !== null && code !== null) {
-      console.log("aqui toca bloquear la UI");
-      setLoading(true);
-    }
-  }, [searchParams]);
+  //   const state = searchParams.get("state");
+  //   const code = searchParams.get("code");
+  //   if (state !== null && code !== null) {
+  //     console.log("aqui toca bloquear la UI");
+  //     setLoading(true);
+  //   }
+  // }, [searchParams]);
 
   return (
     <main className="relative w-full h-full">
