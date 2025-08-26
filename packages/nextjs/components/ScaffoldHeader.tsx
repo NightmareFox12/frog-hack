@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { FaucetButton } from "./scaffold-eth/FaucetButton";
 import { RainbowKitCustomConnectButton } from "./scaffold-eth/RainbowKitCustomConnectButton";
 import { Button } from "./ui/shadcn/button";
-import { BugIcon, File, Home } from "lucide-react";
+import { BugIcon, File } from "lucide-react";
 import { hardhat } from "viem/chains";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
@@ -15,14 +15,14 @@ type HeaderMenuLink = {
 };
 
 export const menuLinks: HeaderMenuLink[] = [
-  {
-    label: "Home",
-    href: "/",
-    icon: <Home />,
-  },
+  // {
+  //   label: "Home",
+  //   href: "/",
+  //   icon: <Home />,
+  // },
   {
     label: "Tasks",
-    href: "/tasks",
+    href: "/",
     icon: <File />,
   },
   {
@@ -46,8 +46,8 @@ export const ScaffoldHeader = () => {
               <Image src="/favicon.png" alt="FrogHack logo" className="cursor-pointer" fill />
             </div>
             <div className="flex flex-col">
-              <span className="font-bold leading-tight">Scaffold-ETH</span>
-              <span className="text-xs">Ethereum dev stack</span>
+              <span className="font-bold leading-tight">FrogHack</span>
+              {/* <span className="text-xs">Ethereum dev stack</span> */}
             </div>
           </Link>
         </div>
