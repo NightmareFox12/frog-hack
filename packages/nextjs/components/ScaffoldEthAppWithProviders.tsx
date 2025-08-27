@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { FormLogin } from "./FormLogin";
+import { LoginForm } from "./LoginForm";
+import { RegistrationForm } from "./RegistrationForm";
 import { ScaffoldFooter } from "./ScaffoldFooter";
 import { ScaffoldHeader } from "./ScaffoldHeader";
 import { ScaffoldSidebar } from "./ScaffoldSidebar";
@@ -22,6 +23,8 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();
   const { isLogin, setIsLogin } = useIsLogin();
 
+  const [showSignUp, setShowSignUp] = useState(false);
+
   //effects
   useEffect(() => {
     setIsLogin(localStorage.getItem(LOCAL_STORAGE_KEYS.IS_LOGIN) !== null);
@@ -37,8 +40,10 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         <ScaffoldFooter />
       </SidebarInset>
     </SidebarProvider>
+  ) : showSignUp ? (
+    <RegistrationForm setShowSignUp={setShowSignUp} />
   ) : (
-    <FormLogin />
+    <LoginForm setShowSignUp={setShowSignUp} />
   );
 };
 

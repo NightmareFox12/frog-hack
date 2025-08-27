@@ -6,8 +6,8 @@ import "~~/styles/globals.css";
 import { getMetadata } from "~~/utils/scaffold-eth/getMetadata";
 
 export const metadata = getMetadata({
-  title: "Frog Hack | game",
-  description: "Built with 🏗 Scaffold-ETH 2",
+  title: "Frog Hack | Game in blockhain",
+  description: "Game",
 });
 
 const pixelFont = localFont({
@@ -16,7 +16,7 @@ const pixelFont = localFont({
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   return (
-    <html lang="es" className={pixelFont.className} suppressHydrationWarning>
+    <html lang="en" className={pixelFont.className} suppressHydrationWarning>
       <body>
         <ThemeProvider enableSystem>
           <ScaffoldEthAppWithProviders>{children}</ScaffoldEthAppWithProviders>
