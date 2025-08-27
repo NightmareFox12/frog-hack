@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { FormLogin } from "./FormLogin";
 import { ScaffoldFooter } from "./ScaffoldFooter";
 import { ScaffoldHeader } from "./ScaffoldHeader";
 import { ScaffoldSidebar } from "./ScaffoldSidebar";
@@ -12,13 +13,21 @@ import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
 import { WagmiProvider } from "wagmi";
 import { BlockieAvatar } from "~~/components/scaffold-eth";
+import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorageKeys";
 import { useInitializeNativeCurrencyPrice } from "~~/hooks/scaffold-eth";
+import { useIsLogin } from "~~/services/store/login.store";
 import { wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
   useInitializeNativeCurrencyPrice();
+  const { isLogin, setIsLogin } = useIsLogin();
 
-  return (
+  //effects
+  useEffect(() => {
+    setIsLogin(localStorage.getItem(LOCAL_STORAGE_KEYS.IS_LOGIN) !== null);
+  }, [setIsLogin]);
+
+  return isLogin ? (
     <SidebarProvider defaultOpen={false}>
       <Toaster richColors={true} position="top-center" />
       <ScaffoldSidebar />
@@ -28,14 +37,8 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
         <ScaffoldFooter />
       </SidebarInset>
     </SidebarProvider>
-    // <>
-    //   <div className="flex flex-col min-h-screen">
-    //     <Header />
-    //     <main className="relative flex flex-col flex-1">{children}</main>
-    //     <Footer />
-    //   </div>
-    //   <Toaster />
-    // </>
+  ) : (
+    <FormLogin />
   );
 };
 

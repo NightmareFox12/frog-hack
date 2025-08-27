@@ -15,6 +15,7 @@ import {
   CardTitle,
 } from "~~/components/ui/shadcn/card";
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
+import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorageKeys";
 
 const TasksPage: NextPage = () => {
   //states
@@ -74,6 +75,13 @@ const TasksPage: NextPage = () => {
         </div>
       )}
 
+      <Button
+        onClick={() => {
+          localStorage.removeItem(LOCAL_STORAGE_KEYS.IS_LOGIN);
+        }}
+      >
+        delete
+      </Button>
       <div className="grid place-items-center">
         <Badge variant="outline" className="py-2 px-4 flex justify-center gap-2 items-center">
           <Clock className="w-4 h-4" />
@@ -172,60 +180,60 @@ const TasksPage: NextPage = () => {
 
 export default TasksPage;
 
-/**
- * TODO: tengo que crear una function para llamar al backend y asi cumplir con esa parte
- Captura el code y state
-Ya lo estás haciendo con useSearchParams() o window.location.search. Ejemplo:
+// /**
+//  * TODO: tengo que crear una function para llamar al backend y asi cumplir con esa parte
+//  Captura el code y state
+// Ya lo estás haciendo con useSearchParams() o window.location.search. Ejemplo:
 
-ts
-const code = searchParams.get("code");
-const state = searchParams.get("state");
-2. Intercambia el code por un access token
-Debes hacer una petición POST al endpoint de Twitter:
+// ts
+// const code = searchParams.get("code");
+// const state = searchParams.get("state");
+// 2. Intercambia el code por un access token
+// Debes hacer una petición POST al endpoint de Twitter:
 
-Código
-https://api.twitter.com/2/oauth2/token
-Con estos datos en el body (form-urlencoded):
+// Código
+// https://api.twitter.com/2/oauth2/token
+// Con estos datos en el body (form-urlencoded):
 
-ts
-const data = {
-  grant_type: "authorization_code",
-  code,
-  redirect_uri: "http://localhost:3000", // debe coincidir con el que usaste antes
-  client_id: "TU_CLIENT_ID",
-  code_verifier: "ax33039fa", // el mismo que usaste en el `code_challenge`
-};
-Y en los headers:
+// ts
+// const data = {
+//   grant_type: "authorization_code",
+//   code,
+//   redirect_uri: "http://localhost:3000", // debe coincidir con el que usaste antes
+//   client_id: "TU_CLIENT_ID",
+//   code_verifier: "ax33039fa", // el mismo que usaste en el `code_challenge`
+// };
+// Y en los headers:
 
-ts
-{
-  "Content-Type": "application/x-www-form-urlencoded",
-  Authorization: `Basic ${btoa(`${client_id}:${client_secret}`)}`,
-}
-⚠️ Twitter requiere que el code_verifier sea el mismo que usaste en el code_challenge_method=plain.
+// ts
+// {
+//   "Content-Type": "application/x-www-form-urlencoded",
+//   Authorization: `Basic ${btoa(`${client_id}:${client_secret}`)}`,
+// }
+// ⚠️ Twitter requiere que el code_verifier sea el mismo que usaste en el code_challenge_method=plain.
 
-3. Recibes el access token
-Si todo sale bien, Twitter te responde con algo como:
+// 3. Recibes el access token
+// Si todo sale bien, Twitter te responde con algo como:
 
-json
-{
-  "token_type": "bearer",
-  "access_token": "AAAA...",
-  "expires_in": 7200,
-  "scope": "users.read follows.read",
-  "refresh_token": "BBBB..."
-}
-4. Usa el token para hacer peticiones
-Ahora puedes hacer peticiones autenticadas a la API de Twitter, por ejemplo:
+// json
+// {
+//   "token_type": "bearer",
+//   "access_token": "AAAA...",
+//   "expires_in": 7200,
+//   "scope": "users.read follows.read",
+//   "refresh_token": "BBBB..."
+// }
+// 4. Usa el token para hacer peticiones
+// Ahora puedes hacer peticiones autenticadas a la API de Twitter, por ejemplo:
 
-http
-GET https://api.twitter.com/2/users/me
-Authorization: Bearer TU_ACCESS_TOKEN
-🧠 ¿Y el state?
-El state es para proteger contra ataques CSRF. Lo ideal es que lo hayas guardado antes de redirigir al usuario a Twitter, y ahora lo compares con el que recibes para asegurarte de que coincide.
+// http
+// GET https://api.twitter.com/2/users/me
+// Authorization: Bearer TU_ACCESS_TOKEN
+// 🧠 ¿Y el state?
+// El state es para proteger contra ataques CSRF. Lo ideal es que lo hayas guardado antes de redirigir al usuario a Twitter, y ahora lo compares con el que recibes para asegurarte de que coincide.
 
-🚨 Consejo de seguridad
-No hagas el intercambio del code por el token directamente en el frontend. Lo ideal es que tengas un backend que lo maneje, para no exponer tu client_secret.
+// 🚨 Consejo de seguridad
+// No hagas el intercambio del code por el token directamente en el frontend. Lo ideal es que tengas un backend que lo maneje, para no exponer tu client_secret.
 
-¿Quieres que te ayude a escribir el código para hacer ese POST a Twitter desde Node.js o desde tu backend? Te lo puedo dejar listo para copiar y pegar.
- */
+// ¿Quieres que te ayude a escribir el código para hacer ese POST a Twitter desde Node.js o desde tu backend? Te lo puedo dejar listo para copiar y pegar.
+//  */
