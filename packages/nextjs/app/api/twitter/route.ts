@@ -3,12 +3,13 @@ import crypto from "crypto";
 import { RowDataPacket } from "mysql2/promise";
 import { mysqlConnection } from "~~/db/mysqlConnection";
 
+const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
+
 export const POST = async (request: NextRequest) => {
   let conn;
   try {
     const { email } = await request.json();
 
-    const clientID = "T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ";
     const redirectUri = encodeURIComponent("https://www.froghack.fun");
     const codeVerifier = crypto.randomBytes(32).toString("base64url");
     const codeChallenge = crypto.createHash("sha256").update(codeVerifier).digest("base64url");
@@ -24,7 +25,7 @@ export const POST = async (request: NextRequest) => {
       state,
     ]);
 
-    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${clientID}&redirect_uri=${redirectUri}&scope=users.read%20follows.read&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=plain`;
+    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${TWITTER_CLIENT_ID}&redirect_uri=${redirectUri}&scope=users.read%20follows.read&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=plain`;
 
     return Response.json({ url });
   } catch (err) {

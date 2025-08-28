@@ -2,6 +2,8 @@ import { NextRequest } from "next/server";
 import { RowDataPacket } from "mysql2/promise";
 import { mysqlConnection } from "~~/db/mysqlConnection";
 
+const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
+
 export const POST = async (request: NextRequest) => {
   let conn;
   try {
@@ -21,27 +23,30 @@ export const POST = async (request: NextRequest) => {
       return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
 
     // 🚀 Intercambio code -> tokens
-    // const tokenRes = await fetch("https://api.twitter.com/2/oauth2/token", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    //   body: new URLSearchParams({
-    //     client_id: process.env.TWITTER_CLIENT_ID!,
-    //     grant_type: "authorization_code",
-    //     code,
-    //     redirect_uri: process.env.TWITTER_REDIRECT_URI!,
-    //     code_verifier: record.code_verifier,
-    //   }),
-    // });
+    const req = await fetch("https://api.x.com/2/oauth2/token", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        code,
+        grant_type: "authorization_code",
+        client_id: TWITTER_CLIENT_ID!,
+        redirect_uri: "https://www.froghack.fun",
+        code_verifier: row[0].code_verifier,
+      }),
+    });
 
-    // const tokenData = await tokenRes.json();
+    const res = await req.json();
 
-    // console.log(tokenData);
-    // if (!tokenRes.ok) {
-    //   console.error("Token exchange failed", tokenData);
-    //   return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
-    // }
+    console.log(res);
+    if (!res.ok) {
+      console.error("Token exchange failed", res);
+      return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
+    }
+
+    return Response.json({ message: "success!!" });
   } catch (err) {
     console.log(err);
+    return Response.json({ message: "A server error has occurred" }, { status: 500 });
   } finally {
     conn?.end();
   }

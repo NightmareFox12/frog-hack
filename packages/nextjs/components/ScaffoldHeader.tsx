@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { FaucetButton } from "./scaffold-eth/FaucetButton";
-import { RainbowKitCustomConnectButton } from "./scaffold-eth/RainbowKitCustomConnectButton";
-import { Button } from "./ui/shadcn/button";
+// import { usePathname } from "next/navigation";
+// import { FaucetButton } from "./scaffold-eth/FaucetButton";
+// import { RainbowKitCustomConnectButton } from "./scaffold-eth/RainbowKitCustomConnectButton";
+// import { Button } from "./ui/shadcn/button";
 import { BugIcon, File } from "lucide-react";
-import { hardhat } from "viem/chains";
-import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
+
+// import { hardhat } from "viem/chains";
+// import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
 type HeaderMenuLink = {
   label: string;
@@ -33,12 +34,12 @@ export const menuLinks: HeaderMenuLink[] = [
 ];
 
 export const ScaffoldHeader = () => {
-  const { targetNetwork } = useTargetNetwork();
-  const isLocalNetwork = targetNetwork.id === hardhat.id;
-  const pathname = usePathname();
+  // const { targetNetwork } = useTargetNetwork();
+  // const isLocalNetwork = targetNetwork.id === hardhat.id;
+  // const pathname = usePathname();
 
   return (
-    <header className="w-full">
+    <header className="w-full bg-green-50">
       <div className="mx-4 h-16 flex items-center justify-between gap-2">
         <div className="flex items-center gap-2 justify-center">
           <Link href="/" passHref className="flex items-center gap-2 ml-4 mr-6 shrink-0">
@@ -51,7 +52,7 @@ export const ScaffoldHeader = () => {
             </div>
           </Link>
         </div>
-        <nav className="hidden md:flex space-x-4 flex-1">
+        {/* <nav className="hidden md:flex space-x-4 flex-1">
           {menuLinks.map(({ label, href, icon }) => {
             const isActive = pathname === href;
             return (
@@ -65,7 +66,7 @@ export const ScaffoldHeader = () => {
           })}
         </nav>
         <RainbowKitCustomConnectButton />
-        {isLocalNetwork && <FaucetButton />}
+        {isLocalNetwork && <FaucetButton />} */}
       </div>
     </header>
   );
