@@ -28,7 +28,7 @@ export const POST = async (request: NextRequest) => {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        authorization: `Bearer ${encoded}`,
+        Authorization: `Basic ${encoded}`,
       },
       body: new URLSearchParams({
         code,
@@ -39,7 +39,7 @@ export const POST = async (request: NextRequest) => {
       }),
     });
 
-    const res = await req.json();
+    const res = await req.text();
 
     console.log(res);
     if (!req.ok) {
