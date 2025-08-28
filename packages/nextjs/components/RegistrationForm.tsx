@@ -8,15 +8,11 @@ import { Label } from "./ui/shadcn/label";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
 import { toast } from "sonner";
 
-// import { useIsLogin } from "~~/services/store/login.store";
-
 type RegistrationFormProps = {
   setShowSignUp: Dispatch<SetStateAction<boolean>>;
 };
 
 export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignUp }) => {
-  // const { setIsLogin } = useIsLogin();
-
   //states
   const [nickName, setNickName] = useState<string>("");
   const [email, setEmail] = useState<string>("");
@@ -44,6 +40,11 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignU
       if (!req.ok) return toast.error(res.message);
 
       toast.success("Successful registration");
+
+      setNickName("");
+      setEmail("");
+      setPassword("");
+
       setShowSignUp(false);
     } catch (err) {
       console.log(err);

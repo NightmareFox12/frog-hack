@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Coins, Copy, Heart, Loader, MessageCircle, Twitter, UserPlus, Users } from "lucide-react";
 import { NextPage } from "next";
+import { toast } from "sonner";
 import { Badge } from "~~/components/ui/shadcn/badge";
 import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
@@ -18,18 +19,24 @@ const topContributors = [
 const referralLink = "https://froghack.xyz/ref/abc123";
 
 const TasksPage: NextPage = () => {
-  //   //states
+  // states
   const [isLoading, setLoading] = useState<boolean>(false);
 
   //functions
   const handleConnectTwitter = async () => {
-    //authorize twitter
-    const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=T1J0LXN0dm9jR3YyM2V0c2FsRlc6MTpjaQ&redirect_uri=https%3A%2F%2Fwww.froghack.fun&scope=users.read%20follows.read&state=${Math.random()
-      .toString(36)
-      .substring(2, 2 + 10)}&code_challenge=ax33039fa&code_challenge_method=plain`;
+    try {
+      const req = await fetch("api/twitter", {
+        method: "POST",
+      });
 
-    console.log(url);
-    window.open(url, "_blank");
+      const res: { message: string; url: string } = await req.json();
+      if (!req.ok) return toast.error(res.message);
+
+      console.log(res.url);
+      window.open(res.url, "_blank");
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const accessToken = async () => {

@@ -13,10 +13,6 @@ export const POST = async (request: NextRequest) => {
 
     conn = await mysqlConnection();
 
-    //TODO:  poner a funcionar el login
-    // TODO: guardar la vaina del localstorage
-    // TODO: empezar con las tasks
-
     //verify nickName
     const [row] = await conn.execute<RowDataPacket[]>("SELECT nick_name FROM user WHERE nick_name = ?", [nickName]);
     if (row.length > 0) return Response.json({ message: "The username already exists" }, { status: 400 });
@@ -37,7 +33,7 @@ export const POST = async (request: NextRequest) => {
     return Response.json({ success: "ok" });
   } catch (err) {
     console.log(err);
-    return Response.json({ err }, { status: 400 });
+    return Response.json({ message: "A server error has occurred" }, { status: 500 });
   } finally {
     await conn?.end();
   }

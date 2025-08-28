@@ -38,6 +38,10 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setShowSignUp }) => {
       if (!req.ok) return toast.error(res.message);
 
       localStorage.setItem(LOCAL_STORAGE_KEYS.IS_LOGIN, "true");
+      localStorage.setItem(LOCAL_STORAGE_KEYS.USER_EMAIL, email);
+
+      setEmail("");
+      setPassword("");
       setIsLogin(true);
     } catch (err) {
       console.log(err);
