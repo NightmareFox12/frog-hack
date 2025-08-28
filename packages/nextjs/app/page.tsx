@@ -93,7 +93,7 @@ const TasksPage: NextPage = () => {
       setLoading(true);
       const email = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_EMAIL);
 
-      console.log(email)
+      console.log(email);
       const req = await fetch("api/callback", {
         method: "POST",
         body: JSON.stringify({ email, state, code }),
