@@ -24,7 +24,7 @@ const TasksPage: NextPage = () => {
   const [isLoading, setLoading] = useState<boolean>(false);
 
   //functions
-  const handleConnectTwitter = async () => {
+  const getUrlAuthTwitter = async () => {
     try {
       const email = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_EMAIL);
 
@@ -43,46 +43,20 @@ const TasksPage: NextPage = () => {
     }
   };
 
-  const accessToken = async () => {
-    try {
-      // / const data = {
-      //   grant_type: "authorization_code",
-      //   code,
-      //   redirect_uri: "http://localhost:3000", // debe coincidir con el que usaste antes
-      //   client_id: "TU_CLIENT_ID",
-      //   code_verifier: "ax33039fa", // el mismo que usaste en el `code_challenge`
-      // };
-
-      //TODO: enviar el code y el otro coso
-      const req = await fetch("/api/login", {
-        method: "POST",
-        body: JSON.stringify({
-          message: "hola",
-        }),
-      });
-
-      const res = await req.json();
-
-      console.log(res);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   const tasks = [
     {
       title: "Connect your Twitter account",
       reward: "+150 FROG",
       icon: Twitter,
       completed: false,
-      action: handleConnectTwitter,
+      action: getUrlAuthTwitter,
     },
     {
       title: "Follow @FrogHackXYZ on Twitter",
       reward: "+50 FROG",
       icon: Users,
       completed: false,
-      action: accessToken,
+      action: () => {},
     },
     {
       title: "Retweet our announcement post",
@@ -114,6 +88,26 @@ const TasksPage: NextPage = () => {
     },
   ] as const;
 
+  const verifyData = async (state: string, code: string) => {
+    try {
+      setLoading(true);
+      const email = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_EMAIL);
+
+      const req = await fetch("api/callback", {
+        method: "POST",
+        body: JSON.stringify({ email, state, code }),
+      });
+
+      const res: { message: string } = await req.json();
+
+      if (!req.ok) return toast.error(res.message);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   //effects
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -122,7 +116,7 @@ const TasksPage: NextPage = () => {
     console.log(state);
     console.log(code);
     if (state && code) {
-      setLoading(true);
+      verifyData(state, code);
     }
   }, []);
 

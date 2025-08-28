@@ -18,10 +18,9 @@ export const POST = async (request: NextRequest) => {
 
     const [row] = await conn.execute<RowDataPacket[]>("SELECT userID FROM user WHERE email = ?", [email]);
 
-    console.log(row);
-    await conn.execute<RowDataPacket[]>("INSERT INTO user_x_auth(userID, code_challenge, state) VALUES (?, ?, ?)", [
+    await conn.execute<RowDataPacket[]>("INSERT INTO user_x_auth(userID, code_verifier, state) VALUES (?, ?, ?)", [
       row[0].userID,
-      codeChallenge,
+      codeVerifier,
       state,
     ]);
 
