@@ -9,6 +9,7 @@ import { Button } from "~~/components/ui/shadcn/button";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "~~/components/ui/shadcn/card";
 import { Progress } from "~~/components/ui/shadcn/progress";
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
+import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorageKeys";
 
 const topContributors = [
   { rank: 1, address: "0x1234...5678", rewards: "8500 FROG" },
@@ -25,8 +26,11 @@ const TasksPage: NextPage = () => {
   //functions
   const handleConnectTwitter = async () => {
     try {
+      const email = localStorage.getItem(LOCAL_STORAGE_KEYS.USER_EMAIL);
+
       const req = await fetch("api/twitter", {
         method: "POST",
+        body: JSON.stringify({ email }),
       });
 
       const res: { message: string; url: string } = await req.json();
