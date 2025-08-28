@@ -2,7 +2,8 @@ import { NextRequest } from "next/server";
 import { RowDataPacket } from "mysql2/promise";
 import { mysqlConnection } from "~~/db/mysqlConnection";
 
-const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID;
+const TWITTER_CLIENT_ID = process.env.TWITTER_CLIENT_ID!;
+const TWITTER_CLIENT_SECRET = process.env.TWITTER_CLIENT_SECRET!;
 
 export const POST = async (request: NextRequest) => {
   let conn;
@@ -24,17 +25,20 @@ export const POST = async (request: NextRequest) => {
     // 🚀 Intercambio code -> tokens
     const req = await fetch("https://api.x.com/2/oauth2/token", {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        authorization: "Bearer " + btoa(TWITTER_CLIENT_ID + ":" + TWITTER_CLIENT_SECRET),
+      },
       body: new URLSearchParams({
         code,
         grant_type: "authorization_code",
-        client_id: TWITTER_CLIENT_ID!,
+        client_id: TWITTER_CLIENT_ID,
         redirect_uri: "https://www.froghack.fun",
         code_verifier: row[0].code_verifier,
       }),
     });
 
-    const res = await req.json();
+    const res = await req.text();
 
     console.log(res);
     if (!req.ok) {
