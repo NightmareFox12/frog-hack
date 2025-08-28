@@ -12,7 +12,7 @@ export const POST = async (request: NextRequest) => {
     conn = await mysqlConnection();
 
     const [row] = await conn.execute<RowDataPacket[]>(
-      "SELECT code_verifier, state FROM user_x_auth JOIN user AS u ON u.id = user_x_auth.user_id WHERE u.email = ?",
+      "SELECT code_verifier, state FROM user_x_auth JOIN user AS u ON u.userID = user_x_auth.userID WHERE u.email = ?",
       [email],
     );
 
