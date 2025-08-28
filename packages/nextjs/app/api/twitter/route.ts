@@ -19,7 +19,8 @@ export const POST = async (request: NextRequest) => {
 
     const [row] = await conn.execute<RowDataPacket[]>("SELECT userID FROM user WHERE email = ?", [email]);
 
-    await conn.execute<RowDataPacket[]>("INSERT INTO user_x_auth(userID, code_verifier, state) VALUES (?, ?, ?)", [
+    await conn.execute("DELETE FROM user_x_auth WHERE userID = ?", [row[0].userID]);
+    await conn.execute("INSERT INTO user_x_auth(userID, code_verifier, state) VALUES (?, ?, ?)", [
       row[0].userID,
       codeVerifier,
       state,
