@@ -10,6 +10,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Progress } from "~~/components/ui/shadcn/progress";
 import { ScrollArea } from "~~/components/ui/shadcn/scroll-area";
 import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorageKeys";
+import { CLEAR_X_URL } from "~~/utils/uiHelpers";
 
 const topContributors = [
   { rank: 1, address: "0x1234...5678", rewards: "8500 FROG" },
@@ -106,6 +107,7 @@ const TasksPage: NextPage = () => {
       toast.success(res.message);
     } catch (err) {
       console.log(err);
+      CLEAR_X_URL();
     } finally {
       setLoading(false);
     }
@@ -116,10 +118,14 @@ const TasksPage: NextPage = () => {
     const params = new URLSearchParams(window.location.search);
     const state = params.get("state");
     const code = params.get("code");
-    console.log(state);
-    console.log(code);
-    if (state && code) {
-      verifyData(state, code);
+    const error = params.get("error");
+
+    if (error !== null) {
+      CLEAR_X_URL();
+      toast.error("Authentication with X was denied.");
+    } else {
+      if (state !== null && code !== null) verifyData(state, code);
+      else toast.error("Authentication with X was denied.");
     }
   }, []);
 

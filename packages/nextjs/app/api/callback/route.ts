@@ -10,7 +10,6 @@ export const POST = async (request: NextRequest) => {
   try {
     const { email, state, code } = await request.json();
 
-    console.log({ email, state, code });
     conn = await mysqlConnection();
 
     const [row] = await conn.execute<RowDataPacket[]>(
@@ -23,11 +22,13 @@ export const POST = async (request: NextRequest) => {
     if (state !== row[0].state) return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
 
     // 🚀 Intercambio code -> tokens
+    const encoded = Buffer.from(TWITTER_CLIENT_ID + ":" + TWITTER_CLIENT_SECRET).toString("base64");
+
     const req = await fetch("https://api.x.com/2/oauth2/token", {
       method: "POST",
       headers: {
         "Content-Type": "application/x-www-form-urlencoded",
-        authorization: "Bearer " + btoa(TWITTER_CLIENT_ID + ":" + TWITTER_CLIENT_SECRET),
+        authorization: `Bearer ${encoded}`,
       },
       body: new URLSearchParams({
         code,
@@ -38,7 +39,7 @@ export const POST = async (request: NextRequest) => {
       }),
     });
 
-    const res = await req.text();
+    const res = await req.json();
 
     console.log(res);
     if (!req.ok) {
