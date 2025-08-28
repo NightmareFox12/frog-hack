@@ -125,7 +125,6 @@ const TasksPage: NextPage = () => {
       toast.error("Authentication with X was denied.");
     } else {
       if (state !== null && code !== null) verifyData(state, code);
-      else toast.error("Authentication with X was denied.");
     }
   }, []);
 
