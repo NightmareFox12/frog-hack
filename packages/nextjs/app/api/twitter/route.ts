@@ -19,12 +19,21 @@ export const POST = async (request: NextRequest) => {
 
     const [row] = await conn.execute<RowDataPacket[]>("SELECT userID FROM user WHERE email = ?", [email]);
 
-    await conn.execute("DELETE FROM user_x_auth WHERE userID = ?", [row[0].userID]);
-    await conn.execute("INSERT INTO user_x_auth(userID, code_verifier, state) VALUES (?, ?, ?)", [
-      row[0].userID,
-      codeVerifier,
-      state,
-    ]);
+    const [row2] = await conn.execute<RowDataPacket[]>("SELECT user_x_auth WHERE userID = ?", [row[0].userID]);
+
+    if (row2.length > 0) {
+      await conn.execute("UPDATE user_x_auth SET code_verifier = ?, state = ? WHERE userID = ?", [
+        codeVerifier,
+        state,
+        row[0].userID,
+      ]);
+    } else {
+      await conn.execute("INSERT INTO user_x_auth(userID, code_verifier, state) VALUES (?, ?, ?)", [
+        row[0].userID,
+        codeVerifier,
+        state,
+      ]);
+    }
 
     const url = `https://twitter.com/i/oauth2/authorize?response_type=code&client_id=${TWITTER_CLIENT_ID}&redirect_uri=${redirectUri}&scope=users.read%20follows.read&state=${state}&code_challenge=${codeChallenge}&code_challenge_method=plain`;
 

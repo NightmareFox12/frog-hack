@@ -9,6 +9,7 @@ export const POST = async (request: NextRequest) => {
   try {
     const { email, state, code } = await request.json();
 
+    console.log({ email, state, code });
     conn = await mysqlConnection();
 
     const [row] = await conn.execute<RowDataPacket[]>(
@@ -16,11 +17,9 @@ export const POST = async (request: NextRequest) => {
       [email],
     );
 
-    console.log(row);
     if (row.length === 0) return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
 
-    if (row[0].code_verifier !== code || state !== row[0].state)
-      return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
+    if (state !== row[0].state) return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
 
     // 🚀 Intercambio code -> tokens
     const req = await fetch("https://api.x.com/2/oauth2/token", {
@@ -38,7 +37,7 @@ export const POST = async (request: NextRequest) => {
     const res = await req.json();
 
     console.log(res);
-    if (!res.ok) {
+    if (!req.ok) {
       console.error("Token exchange failed", res);
       return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
     }
