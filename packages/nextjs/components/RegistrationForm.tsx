@@ -6,6 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Input } from "./ui/shadcn/input";
 import { Label } from "./ui/shadcn/label";
 import { Eye, EyeOff, Lock, Mail, User } from "lucide-react";
+import { toast } from "sonner";
 
 // import { useIsLogin } from "~~/services/store/login.store";
 
@@ -26,8 +27,8 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignU
   //functions
   const handleSubmit = async (e: React.FormEvent) => {
     try {
-      e.preventDefault();
       setIsLoading(true);
+      e.preventDefault();
 
       const req = await fetch("api/sign-up", {
         method: "POST",
@@ -38,10 +39,12 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignU
         }),
       });
 
-      const res = await req.json();
-      console.log(res);
-      // await new Promise(resolve => setTimeout(resolve, 1000));
-      // setIsLogin(true);
+      const res: { message: string } = await req.json();
+
+      if (!req.ok) return toast.error(res.message);
+
+      toast.success("Successful registration");
+      setShowSignUp(false);
     } catch (err) {
       console.log(err);
     } finally {
@@ -119,6 +122,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignU
                   />
                   <Button
                     variant="ghost"
+                    type="button"
                     size="sm"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
@@ -134,7 +138,7 @@ export const RegistrationForm: React.FC<RegistrationFormProps> = ({ setShowSignU
 
               <Button
                 className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
-                disabled={isLoading}
+                disabled={nickName.length < 2 || email.length < 2 || password.length < 5 || isLoading}
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">

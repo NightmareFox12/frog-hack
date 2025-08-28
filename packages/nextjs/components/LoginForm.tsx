@@ -6,6 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/
 import { Input } from "./ui/shadcn/input";
 import { Label } from "./ui/shadcn/label";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
+import { toast } from "sonner";
+import { LOCAL_STORAGE_KEYS } from "~~/constants/localStorageKeys";
 import { useIsLogin } from "~~/services/store/login.store";
 
 type LoginFormProps = {
@@ -16,20 +18,32 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setShowSignUp }) => {
   const { setIsLogin } = useIsLogin();
 
   //states
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
+    try {
+      setIsLoading(true);
+      e.preventDefault();
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLogin(true);
+      const req = await fetch("api/login", {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      });
 
-    console.log("Login attempt:", { email, password });
-    setIsLoading(false);
+      const res: { message: string } = await req.json();
+
+      if (!req.ok) return toast.error(res.message);
+
+      localStorage.setItem(LOCAL_STORAGE_KEYS.IS_LOGIN, "true");
+      setIsLogin(true);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -86,6 +100,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setShowSignUp }) => {
                   <Button
                     variant="ghost"
                     size="sm"
+                    type="button"
                     className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                     onClick={() => setShowPassword(!showPassword)}
                   >

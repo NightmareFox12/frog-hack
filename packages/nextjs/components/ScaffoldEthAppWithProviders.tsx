@@ -30,20 +30,24 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
     setIsLogin(localStorage.getItem(LOCAL_STORAGE_KEYS.IS_LOGIN) !== null);
   }, [setIsLogin]);
 
-  return isLogin ? (
-    <SidebarProvider defaultOpen={false}>
+  return (
+    <>
       <Toaster richColors={true} position="top-center" />
-      <ScaffoldSidebar />
-      <SidebarInset>
-        <ScaffoldHeader />
-        {children}
-        <ScaffoldFooter />
-      </SidebarInset>
-    </SidebarProvider>
-  ) : showSignUp ? (
-    <RegistrationForm setShowSignUp={setShowSignUp} />
-  ) : (
-    <LoginForm setShowSignUp={setShowSignUp} />
+      {isLogin ? (
+        <SidebarProvider defaultOpen={false}>
+          <ScaffoldSidebar />
+          <SidebarInset>
+            <ScaffoldHeader />
+            {children}
+            <ScaffoldFooter />
+          </SidebarInset>
+        </SidebarProvider>
+      ) : showSignUp ? (
+        <RegistrationForm setShowSignUp={setShowSignUp} />
+      ) : (
+        <LoginForm setShowSignUp={setShowSignUp} />
+      )}
+    </>
   );
 };
 
