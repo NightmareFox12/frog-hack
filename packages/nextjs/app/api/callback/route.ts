@@ -18,10 +18,8 @@ export const POST = async (request: NextRequest) => {
     );
 
     if (row.length === 0) return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
-
     if (state !== row[0].state) return Response.json({ message: "Unauthorized or invalid request" }, { status: 401 });
 
-    // 🚀 Intercambio code -> tokens
     const encoded = Buffer.from(TWITTER_CLIENT_ID + ":" + TWITTER_CLIENT_SECRET).toString("base64");
 
     const req = await fetch("https://api.x.com/2/oauth2/token", {
@@ -39,15 +37,12 @@ export const POST = async (request: NextRequest) => {
       }),
     });
 
-    const res = await req.text();
+    const res: { access_token: string } = await req.json();
 
-    console.log(res);
-    if (!req.ok) {
-      console.error("Token exchange failed", res);
-      return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
-    }
+    if (!req.ok) return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
+    await conn.execute<RowDataPacket[]>("UPDATE user SET bearer_x = ?", [res.access_token]);
 
-    return Response.json({ message: "success!!" });
+    return Response.json({ message: "Successful connection" });
   } catch (err) {
     console.log(err);
     return Response.json({ message: "A server error has occurred" }, { status: 500 });

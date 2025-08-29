@@ -36,7 +36,7 @@ const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
       {isLogin ? (
         <SidebarProvider defaultOpen={false}>
           <ScaffoldSidebar />
-          <SidebarInset>
+          <SidebarInset className="z-0">
             <ScaffoldHeader />
             {children}
             <ScaffoldFooter />

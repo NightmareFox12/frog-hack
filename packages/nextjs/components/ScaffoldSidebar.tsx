@@ -2,10 +2,11 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarHeader } f
 
 export const ScaffoldSidebar = () => {
   return (
-    <Sidebar>
+    <Sidebar variant="floating">
       <SidebarHeader />
       <SidebarContent>
         <SidebarGroup />
+        <p>ddd</p>
         <SidebarGroup />
       </SidebarContent>
       <SidebarFooter />

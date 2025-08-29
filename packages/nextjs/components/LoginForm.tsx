@@ -51,19 +51,24 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setShowSignUp }) => {
   };
 
   return (
-    <main className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950 dark:to-emerald-900 p-4">
+    <main className="relative min-h-screen flex items-center justify-center p-4">
+      {/* background image */}
+      <div className="w-full h-full absolute pointer-events-none inset-0 -z-10">
+        <Image src="/image-bg.png" alt="frog background" fill={true} className="object-cover" />
+      </div>
       <div className="w-full max-w-md">
+        {/* title */}
         <div className="text-center mb-6">
           <div className="relative w-full grid place-items-center mb-2">
             <Image width={80} height={80} src={"/favicon.png"} alt="frog hack logo" />
           </div>
-          <h1 className="text-4xl font-bold text-green-700 dark:text-green-400 mb-2">FrogHack</h1>
-          <p className="text-muted-foreground">Log in to continue</p>
+          <h1 className="text-4xl lg:text-5xl font-bold text-white tracking-wider mb-2">FrogHack</h1>
+          <p className="text-white/90">Log in to continue</p>
         </div>
 
-        <Card className="w-full shadow-lg border-green-200 dark:border-green-800">
+        <Card className="w-full shadow-lg border-green-200 z-10">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl font-bold text-center text-green-700 dark:text-green-400">Log In</CardTitle>
+            <CardTitle className="text-2xl font-bold text-center text-green-600">Log In</CardTitle>
             <CardDescription className="text-center">Enter your credentials to access FrogHack</CardDescription>
           </CardHeader>
           <CardContent>
@@ -139,7 +144,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({ setShowSignUp }) => {
                   onClick={() => setShowSignUp(true)}
                   variant="link"
                   size="sm"
-                  className="text-green-600 hover:text-green-700 dark:text-green-400 dark:hover:text-green-300 font-medium"
+                  className="text-green-600 hover:text-green-700 font-medium"
                 >
                   Register here
                 </Button>
