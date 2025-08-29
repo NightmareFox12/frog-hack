@@ -47,6 +47,8 @@ export const POST = async (request: NextRequest) => {
       headers: { Authorization: `Bearer ${res.access_token}` },
     });
     const frogData = await frogResp.json();
+
+    console.log({ frogData });
     const frogId = frogData.data.id;
 
     // 2. Obtener el ID del usuario autenticado
