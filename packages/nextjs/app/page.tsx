@@ -97,6 +97,7 @@ const TasksPage: NextPage = () => {
 
       const res: { message: string } = await req.json();
 
+      console.log(res);
       if (!req.ok) return toast.error(res.message);
 
       toast.success(res.message);

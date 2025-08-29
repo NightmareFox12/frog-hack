@@ -42,7 +42,32 @@ export const POST = async (request: NextRequest) => {
     if (!req.ok) return Response.json({ message: "OAuth token exchange failed" }, { status: 502 });
     await conn.execute<RowDataPacket[]>("UPDATE user SET bearer_x = ?", [res.access_token]);
 
-    return Response.json({ message: "Successful connection" });
+    // 1. Obtener el ID de la cuenta "Froghacknet"
+    const frogResp = await fetch("https://api.x.com/2/users/by/username/Froghacknet", {
+      headers: { Authorization: `Bearer ${res.access_token}` },
+    });
+    const frogData = await frogResp.json();
+    const frogId = frogData.data.id;
+
+    // 2. Obtener el ID del usuario autenticado
+    const meResp = await fetch("https://api.x.com/2/users/me", {
+      headers: { Authorization: `Bearer ${res.access_token}` },
+    });
+    const meData = await meResp.json();
+    const myUserId = meData.data.id;
+
+    // 3. Verificar si sigue a Froghacknet
+    const followResp = await fetch(`https://api.x.com/2/users/${myUserId}/following/${frogId}`, {
+      headers: { Authorization: `Bearer ${res.access_token}` },
+    });
+
+    if (followResp.status === 200) {
+      console.log("El usuario sigue a Froghacknet");
+    } else if (followResp.status === 404) {
+      console.log("El usuario NO sigue a Froghacknet");
+    }
+
+    return Response.json({ message: "Successful connection", frogId: frogId });
   } catch (err) {
     console.log(err);
     return Response.json({ message: "A server error has occurred" }, { status: 500 });
